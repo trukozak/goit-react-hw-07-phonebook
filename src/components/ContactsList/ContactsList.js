@@ -1,38 +1,30 @@
 import React from 'react';
 import ContactsListItem from './ContactsListItem/ContactsListItem';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { deleteContact } from '../../redux/contacts/contactsAction';
+import {
+  getContactsFiltered,
+  getLoadings,
+} from '../../redux/contacts/contactsSelector';
 
-const ContactsList = ({ contacts, filter, onDeleteContact }) => {
+const ContactsList = ({ contacts, loading }) => {
   return (
-    <ul>
-      {contacts
-        .filter(contact =>
-          contact.name.toLowerCase().includes(filter.toLowerCase()),
-        )
-        .map(contact => (
-          <ContactsListItem
-            key={contact.id}
-            {...contact}
-            onDeleteContact={onDeleteContact}
-          />
-        ))}
-    </ul>
+    <>
+      {loading ? (
+        <h2>Loading Contacts...</h2>
+      ) : (
+        <ul>
+          {contacts.map(contact => (
+            <ContactsListItem key={contact.id} {...contact} id={contact.id} />
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
 
-ContactsList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  filter: PropTypes.string.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
-
 const mapStateToProps = state => ({
-  contacts: state.contacts,
-  filter: state.filter,
+  contacts: getContactsFiltered(state),
+  loading: getLoadings(state),
 });
 
-export default connect(mapStateToProps, { onDeleteContact: deleteContact })(
-  ContactsList,
-);
+export default connect(mapStateToProps)(ContactsList);

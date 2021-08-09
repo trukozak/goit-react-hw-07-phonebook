@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { AdvFormStyled } from './AdvForm.Styled';
-import { v4 as uuidv4 } from 'uuid';
 import { connect } from 'react-redux';
-import { addContact } from '../../redux/contacts/contactsAction';
+import {
+  addContactOperations,
+  fetchContactsOperations,
+} from '../../redux/contacts/contactsOperations';
+import { getContacts } from '../../redux/contacts/contactsSelector';
 
 const initialState = {
   name: '',
@@ -13,6 +16,9 @@ class AdvForm extends Component {
     ...initialState,
   };
 
+  componentDidMount() {
+    this.props.fetchContactsOperations();
+  }
   onHandleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -28,9 +34,8 @@ class AdvForm extends Component {
       return alert(`${this.state.name} is already in contacts.`);
     }
 
-    this.props.addContact({
+    this.props.addContactOperations({
       ...this.state,
-      id: uuidv4(),
     });
     this.setState({ ...initialState });
   };
@@ -76,7 +81,10 @@ class AdvForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  contacts: state.contacts,
+  contacts: getContacts(state),
 });
 
-export default connect(mapStateToProps, { addContact })(AdvForm);
+export default connect(mapStateToProps, {
+  fetchContactsOperations,
+  addContactOperations,
+})(AdvForm);

@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FilterStyled } from './FilterStyled';
 import { connect } from 'react-redux';
 import { changeFilter } from '../../redux/contacts/contactsAction';
+import { getFilters } from '../../redux/contacts/contactsSelector';
 
 const Filter = ({ filter, changeFilter }) => {
   const onChange = e => {
@@ -24,13 +24,8 @@ const Filter = ({ filter, changeFilter }) => {
   );
 };
 
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  changeFilter: PropTypes.func.isRequired,
-};
-
 const mapStateToProps = state => ({
-  filter: state.filter,
+  filter: getFilters(state),
 });
 
 export default connect(mapStateToProps, { changeFilter })(Filter);

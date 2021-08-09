@@ -1,10 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { deleteContactOperation } from '../../../redux/contacts/contactsOperations';
 import { ContactsListItemStyled } from './ContactsListItemStyled';
 
-const ContactsListItem = ({ name, number, id, onDeleteContact }) => {
+const ContactsListItem = ({ name, number, id, deleteContactOperation }) => {
   const onDeleteItem = () => {
-    onDeleteContact(id);
+    deleteContactOperation(id);
   };
 
   return (
@@ -21,11 +22,4 @@ const ContactsListItem = ({ name, number, id, onDeleteContact }) => {
   );
 };
 
-ContactsListItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
-
-export default ContactsListItem;
+export default connect(null, { deleteContactOperation })(ContactsListItem);
